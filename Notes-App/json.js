@@ -6,17 +6,17 @@ const fs = require("fs");
 //     author: "Ryan Holiday"
 // };
 
-// fs.writeFileSync("data.json", JSON.stringify(book));
+// fs.writeFileSync("practice-data.json", JSON.stringify(book));
 
 // toString() => buffer data to string
 // JSON.parse() => string of object to object
-// const data = JSON.parse(fs.readFileSync("data.json").toString());
+// const data = JSON.parse(fs.readFileSync("practice-data.json").toString());
 // console.log(data, data.title, data.author);
 
 
-const data = JSON.parse(fs.readFileSync("data.json","utf-8"));
+const data = JSON.parse(fs.readFileSync("practice-data.json","utf-8"));
 data.name = "Sayantika";
 data.age = 23;
-fs.writeFileSync("data.json", JSON.stringify(data));
+fs.writeFileSync("practice-data.json", JSON.stringify(data));
 
 
