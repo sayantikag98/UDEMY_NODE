@@ -1,11 +1,15 @@
 const fs = require("fs");
 const chalk = require("chalk");
 
+// debugger;
+
 const comparator = (ele1, ele2) => ele1.title<ele2.title;
 
 const readNotes = () => {
-    if(fs.existsSync("data.json"))
-        return JSON.parse(fs.readFileSync("data.json", "utf-8")).sort(comparator);
+    if(fs.existsSync("data.json")){
+        const sortedNoteList = JSON.parse(fs.readFileSync("data.json", "utf-8")).sort(comparator);
+        return sortedNoteList;
+    }
     return [];
 };
 
@@ -27,7 +31,7 @@ const addNotes = (title, body) => {
         writeNotes(notes);
         console.log(chalk.green.inverse("New note added"));
     }    
-}
+};
 
 const removeNotes = title => {
     const notes = readNotes();
@@ -49,7 +53,7 @@ const listNotes = () => {
         console.log(chalk.cyan.inverse("Your notes"));
         let counter = 1;
         notes.forEach(note => {
-            console.log(`${chalk.red.inverse(counter+".")} ${chalk.yellow.inverse(note.title)}`);
+            console.log(chalk.magenta.inverse(`${chalk.red.inverse(counter+".")} ${chalk.yellow.inverse(note.title)} ${chalk.blue.inverse(note.body)}`));
             counter++;
         });
     }
@@ -63,6 +67,64 @@ const readParticularNote = title => {
         console.log(chalk.cyan.inverse(note.body));
     }
     else console.log(chalk.red.inverse("No such note exists"));
-}
+};
 
-module.exports = {listNotes, addNotes, removeNotes, readParticularNote};
+const editNoteTitle = (oldTitle, newTitle) => {
+    const notes = readNotes();
+    const note = notes.find(ele => ele.title === oldTitle);
+    const titleList = notes.map(ele => ele.title);
+    if(note){
+        if(!titleList.find(ele => ele === newTitle)){
+            note.title = newTitle;
+            notes[notes.indexOf(note)] = note;
+            writeNotes(notes);
+            console.log(chalk.green.inverse("Note title changed"));
+        }
+        else{
+            console.log(chalk.red.inverse("Note title exists. Give a new title..."));
+        }
+    }
+    else{
+        console.log(chalk.red.inverse("No such note exists"));
+    }
+
+};
+
+const editNoteBody = (oldTitle, newBody) => {
+    const notes = readNotes();
+    const note = notes.find(ele => ele.title === oldTitle);
+    if(note){
+        note.body = newBody;
+        notes[notes.indexOf(note)] = note;
+        writeNotes(notes);
+        console.log(chalk.green.inverse("Note body changed"));
+    }
+    else{
+        console.log(chalk.red.inverse("No such note exists"));
+    }
+
+};
+
+
+const editWholeNote = (oldTitle, newTitle, newBody) => {
+    const notes = readNotes();
+    const note = notes.find(ele => ele.title === oldTitle);
+    const titleList = notes.map(ele => ele.title);
+
+    if(note){
+        if(!titleList.find(ele => ele === newTitle)){
+            note.title = newTitle;
+            note.body = newBody;
+            notes[notes.indexOf(note)] = note;
+            writeNotes(notes);
+            console.log(chalk.green.inverse("Note title changed"));
+        }
+        else{
+            console.log(chalk.red.inverse("Note title exists. Give a new title..."));
+        }
+    }
+    else console.log(chalk.red.inverse("No such note exists"));
+
+};
+
+module.exports = {listNotes, addNotes, removeNotes, readParticularNote, editNoteTitle, editNoteBody, editWholeNote};
